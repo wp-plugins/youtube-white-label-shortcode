@@ -20,7 +20,7 @@ For question please visit my blog @ [http://austinpassy.com](http://austinpassy.
 
 Follow the steps below to install the plugin.
 
-1. Upload the `hellos-bar` directory to the /wp-content/plugins/ directory. OR click add new plugin in your WordPress admin.
+1. Upload the `youtube-white-label` directory to the /wp-content/plugins/ directory. OR click add new plugin in your WordPress admin.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Visit your post/page edit screen to create a shortcode.
 
