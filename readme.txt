@@ -10,7 +10,7 @@ A simple shortcode to embed white label YouTube videos using the latest iframe H
 
 == Description ==
 
-This plugin adds the shortcode `[youtube-embed]` and allows you to input any YouTube&trade; video (that allows embeding outsite the YouTube&trage; domain) with control over the logo, player, autostart and more.
+This plugin adds the shortcode `[youtube-embed]` and allows you to input any YouTube&trade; video (that allows embeding outsite the YouTube&trade; domain) with control over the logo, player, autostart and more.
 
 A shortcode generator has been added to all public $post_type add and edit screens. You can modify the options and it will output the correct shortcode arguments.
 
