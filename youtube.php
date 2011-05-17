@@ -3,7 +3,7 @@
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR useing the built in shortcode builder metabox in the post[-new].php page.
- * Version: 0.1
+ * Version: 0.1.1
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austinpassy.com
  *
@@ -32,7 +32,7 @@ if ( !function_exists( 'youtube_white_label_shortcode' ) ) {
 if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 	class YouTube_White_Label_Shortcode {
 		
-		const version = '0.1';
+		const version = '0.1.1';
 		const domain  = 'youtube-embed';
 		
 		function YouTube_White_Label_Shortcode() {
@@ -128,7 +128,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				$iframe .= 'style="border:0; height:' . absint( $height ) . 'px; width:' . absint( $width ) . 'px">';			
 				$iframe .= '</iframe>';
 				
-				if ( $thanks == '1' )
+				if ( $thanks == '1' || $thanks != '' )
 					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __('Powered by YouTube White Label Shortcode', self::domain ) . '">White Label</a></span>';
 				
 				$iframe .= '</p>';
