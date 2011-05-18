@@ -8,13 +8,13 @@ function preview() {
 			var ThisID = jQuery(this).prop("name").replace('_YouTube_', '').toLowerCase();
 		Values.push(ThisID + '="' + jQuery(this).val() + '"');
 	});
-	jQuery('#_YouTube_output').html('[youtube-embed ' + Values.join(' ') + ' /]');
+	jQuery('#_YouTube_output').html('[youtube-white-label ' + Values.join(' ') + ' /]');
 }
 
 jQuery(document).ready(
 	function($) {
 		var post_type 	= $('[name="post_type"]').val();
-		var meta_box	= $('#youtube-embed-' + post_type + '-meta-box').length;
+		var meta_box	= $('#youtube-white-label-' + post_type + '-meta-box').length;
 		if( meta_box > 0 ) {
 	
 			var $Controls = {
@@ -33,7 +33,7 @@ jQuery(document).ready(
 			$Controls.selects.bind('click change', preview);
 			
 			/* Advanced dropdown */
-			$('#youtube-embed-post-meta-box p:not(#youtube-embed-post-meta-box p:first-child, #youtube-embed-post-meta-box p.output, #youtube-embed-post-meta-box p.howto, #youtube-embed-post-meta-box p.youtube-advanced-wrap)').appendTo('#youtube-advanced');
+			$('#youtube-white-label-post-meta-box p:not(#youtube-white-label-post-meta-box p:first-child, #youtube-white-label-post-meta-box p.output, #youtube-white-label-post-meta-box p.howto, #youtube-white-label-post-meta-box p.youtube-advanced-wrap)').appendTo('#youtube-advanced');
 			$('a.youtube-advanced').click( function(e) {
 				e.preventDefault();
 				$('#youtube-advanced').slideToggle('slow');

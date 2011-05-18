@@ -1,0 +1,120 @@
+# Copyright (C) 2010 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version:  \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/youtube-white-label-"
+"shortcode\n"
+"POT-Creation-Date: 2011-05-18 03:28:18+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: youtube.php:166
+msgid "Powered by YouTube White Label Shortcode"
+msgstr ""
+
+#: youtube.php:188
+msgid "YouTube Embed Shortcode Creator"
+msgstr ""
+
+#: youtube.php:209
+msgid "Enter the YouTube ID:"
+msgstr ""
+
+#: youtube.php:210
+msgid ""
+"<small>http://www.youtube.com/watch?v=</small><strong>Rt3Kiq9NH_k</strong>"
+msgstr ""
+
+#: youtube.php:212
+msgid "Height:"
+msgstr ""
+
+#: youtube.php:213
+msgid "Enter desired height. Example: <code>400</code>"
+msgstr ""
+
+#: youtube.php:215
+msgid "Width:"
+msgstr ""
+
+#: youtube.php:216
+msgid "Enter desired width. Example: <code>640</code>"
+msgstr ""
+
+#: youtube.php:218
+msgid "Autohide:"
+msgstr ""
+
+#: youtube.php:221
+msgid "Autoplay:"
+msgstr ""
+
+#: youtube.php:222
+msgid "Should this video start playing automatically?"
+msgstr ""
+
+#: youtube.php:224
+msgid "Controls:"
+msgstr ""
+
+#: youtube.php:225
+msgid "The video controls, seen at the bottom of the player."
+msgstr ""
+
+#: youtube.php:227
+msgid "High Def:"
+msgstr ""
+
+#: youtube.php:228
+msgid "Auto start in <abbr title=\"High Definition\">HD</abbr>."
+msgstr ""
+
+#: youtube.php:230
+msgid "Related:"
+msgstr ""
+
+#: youtube.php:231
+msgid "Show realted videos at the end?"
+msgstr ""
+
+#: youtube.php:233
+msgid "Showinfo:"
+msgstr ""
+
+#: youtube.php:236
+msgid "Thanks:"
+msgstr ""
+
+#: youtube.php:237
+msgid "Leave link to author (Hidden from public view)."
+msgstr ""
+
+#: youtube.php:239
+msgid "Autosize:"
+msgstr ""
+
+#: youtube.php:240
+msgid ""
+"Include a jQuery file to &ldquo;autosize&rdquo; the video to fit the content?"
+msgstr ""
+
+#: youtube.php:262
+msgid "Advanced options"
+msgstr ""
+
+#: youtube.php:267
+msgid "Output:"
+msgstr ""
+
+#: youtube.php:272
+msgid "Like this plugin?, donate"
+msgstr ""
+
+#: admin/dashboard.php:9
+msgid "The Frosty Network <em>feeds</em>"
+msgstr ""

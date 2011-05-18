@@ -41,6 +41,11 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.1.4 (5/17/11) =
+
+* Fixed jQuery bug.
+* Added `.pot` file for translation.
+
 = Version 0.1.3 (5/17/11) =
 
 * Security fixes.
@@ -65,6 +70,6 @@ Follow the steps below to install the plugin.
 
 * Fixed jQuery `.prop()` issues with older jQuery versions (added fallback).
 
-= 0.1.3 =
+= 0.1.4 =
 
-* Security fixes and new front end jQuery auto-sizer option. ALERT: `[youtube-embed]` is going to be replaced with `[youtube-white-label]`.
+* Security fixes and new front end jQuery auto-sizer option. ALERT: `[youtube-embed]` is going to be replaced with `[youtube-white-label]`. Fixed jQUery bug.
