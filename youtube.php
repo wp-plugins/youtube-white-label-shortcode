@@ -2,18 +2,21 @@
 /**
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
- * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR useing the built in shortcode builder metabox in the post[-new].php page.
- * Version: 0.1.1
+ * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
+ * Version: 0.1.3
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austinpassy.com
+ * Text Domain: youtube-white-label
  *
  * Developers can learn more about the WordPress shortcode API:
  * @link http://codex.wordpress.org/Shortcode_API
  *
  * @copyright 2011
  * @author Austin Passy
- * @link http://austinpassy.com/
+ * @link http://austinpassy.com/2011/05/announcing-youtube-white-label-shortcode-plugin/
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @help http://scribu.net/wordpress/optimal-script-loading.html
+ * @ref http://bavotasan.com/tutorials/jquery-to-resize-videos/#comment-26200
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,8 +35,9 @@ if ( !function_exists( 'youtube_white_label_shortcode' ) ) {
 if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 	class YouTube_White_Label_Shortcode {
 		
-		const version = '0.1.1';
-		const domain  = 'youtube-embed';
+		static $white_label_script;
+		const version = '0.1.3';
+		const domain  = 'youtube-white-label';
 		
 		function YouTube_White_Label_Shortcode() {
 			$this->__construct();
@@ -42,17 +46,29 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		function __construct() {
 			register_activation_hook( __FILE__, array( __CLASS__, 'activate' ) );
 			
+			add_action( 'extra_theme_headers', array( __CLASS__, 'extra_theme_headers' ) );
 			add_action( 'init', array( __CLASS__, 'activate' ) );
 			add_action( 'init', array( __CLASS__, 'locale' ) );
 			
-			add_action( 'admin_init', array( __CLASS__, 'scripts' ) );
+			add_action( 'admin_init', array( __CLASS__, 'admin_scripts' ) );
+			add_action( 'wp_print_footer_scripts', array( __CLASS__, 'scripts' ) );
 			//add_action( 'admin_init', array( __CLASS__, 'styles' ) );
 			
 			/* Add the post meta box creation function to the 'admin_menu' hook. */
 			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
 			add_action( 'admin_menu', array( __CLASS__, 'add_meta_box' ) );
 			
+			add_shortcode( 'youtube-embed', array( __CLASS__, 'shortcode' ) );
 			add_shortcode( self::domain, array( __CLASS__, 'shortcode' ) );
+		}
+		
+		/**
+		 * @since 0.1.2
+		 */
+		function extra_theme_headers( $headers ) {
+			$headers['Domain'] = 'Text Domain';
+		
+			return $headers;
 		}
 		
 		function activate() {
@@ -68,16 +84,30 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			load_plugin_textdomain( self::domain, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 		
-		function scripts() {
+		function admin_scripts() {
 			global $pagenow;
 			if ( $pagenow == 'post.php' || $pagenow == 'post-new.php' )
-				wp_enqueue_script( self::domain, plugins_url( 'youtube.js', __FILE__ ), array( 'jquery' ), self::version, false );
+				wp_enqueue_script( self::domain . '-admin', plugins_url( 'admin/js/admin.js', __FILE__ ), array( 'jquery' ), self::version, false );
+		}
+		
+		function scripts() {
+			if ( !self::$white_label_script )
+				return;
+				
+			wp_enqueue_script( self::domain, plugins_url( 'js/youtube.js', __FILE__ ), array( 'jquery' ), self::version, false );
+			wp_print_scripts( self::domain );
 		}
 		
 		function styles() {
 			global $pagenow;
 			if ( $pagenow == 'post.php' || $pagenow == 'post-new.php' )
 				wp_register_style( self::domain . '-admin', plugins_url( 'library/css/admin.css', __FILE__ ), false, self::version, 'screen' );
+		}
+		
+		function plugin_data( $arg ) {
+			$plugin = get_plugin_data( __FILE__ );
+			
+			return $plugin[$arg];
 		}
 	
 		/**
@@ -100,7 +130,11 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				'rel' 		=> '0',
 				'showinfo' 	=> '0',
 				'thanks' 	=> '1',
+				'autosize'	=> '1',
 			), $attr ) );
+			
+			if ( !empty( $autosize ) && $autosize == '1' )				
+				self::$white_label_script = true;
 			
 			$height	= str_replace( array( '%', 'em', 'px' ), '', $height );
 			$width	= str_replace( array( '%', 'em', 'px' ), '', $width  );
@@ -109,7 +143,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			if ( !empty( $id ) ) {
 				$iframe  = '<p>';
 				$iframe .= '<iframe id="' . self::domain . '" type="text/html" ';				
-				$iframe .= 'src="http://www.youtube.com/embed/' . $id . '?';
+				$iframe .= 'src="http://www.youtube.com/embed/' . esc_attr( $id ) . '?';
 				
 				if ( $autohide != '' )
 					$iframe .= '&amp;autohide=' . $autohide;
@@ -125,10 +159,10 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 					$iframe .= '&amp;showinfo=' . $showinfo;
 				$iframe .= '" ';	
 				
-				$iframe .= 'style="border:0; height:' . absint( $height ) . 'px; width:' . absint( $width ) . 'px">';			
+				$iframe .= 'style="border:0; height:' . esc_attr( absint( $height ) ) . 'px; width:' . esc_attr( absint( $width ) ) . 'px">';			
 				$iframe .= '</iframe>';
 				
-				if ( $thanks == '1' || $thanks != '' )
+				if ( empty( $thanks ) || $thanks == '1' )
 					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __('Powered by YouTube White Label Shortcode', self::domain ) . '">White Label</a></span>';
 				
 				$iframe .= '</p>';
@@ -153,13 +187,6 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				/* Add the meta box. */
 				add_meta_box( self::domain . "-{$type->name}-meta-box", __( 'YouTube Embed Shortcode Creator', self::domain ), array( __CLASS__, 'meta_box' ), $type->name, 'side', 'default' );
 			}
-		
-			/**
-			 * Saves the post meta box data.
-			 * Lets not save this, just an easy way to enter the details, 
-			 * then send to editor.
-			add_action( 'save_post', array( __CLASS__, 'save_meta_box' ), 10, 2 );
-			 */
 		}
 		
 		/**
@@ -208,6 +235,9 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			
 			$meta['thanks'] = array( 'name' => '_YouTube_thanks', 'title' => __( 'Thanks:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
 				'description' => __( 'Leave link to author (Hidden from public view).', self::domain ) );
+			
+			$meta['autosize'] = array( 'name' => '_YouTube_autosize', 'title' => __( 'Autosize:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Include a jQuery file to &ldquo;autosize&rdquo; the video to fit the content?', self::domain ) );
 		
 			return $meta;
 		}

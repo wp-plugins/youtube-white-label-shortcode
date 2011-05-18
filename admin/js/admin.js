@@ -5,13 +5,14 @@ function preview() {
 		if( Version > '1.6' )
 			var ThisID = jQuery(this).prop("name").replace('_YouTube_', '').toLowerCase();
 		else
-			var ThisID = jQuery(this).attr("name").replace('_YouTube_', '').toLowerCase();
+			var ThisID = jQuery(this).prop("name").replace('_YouTube_', '').toLowerCase();
 		Values.push(ThisID + '="' + jQuery(this).val() + '"');
 	});
 	jQuery('#_YouTube_output').html('[youtube-embed ' + Values.join(' ') + ' /]');
 }
+
 jQuery(document).ready(
-	function($) {		
+	function($) {
 		var post_type 	= $('[name="post_type"]').val();
 		var meta_box	= $('#youtube-embed-' + post_type + '-meta-box').length;
 		if( meta_box > 0 ) {
