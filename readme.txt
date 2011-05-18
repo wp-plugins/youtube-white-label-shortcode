@@ -41,6 +41,10 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.1.5 (5/18/11) =
+
+* Fixed admin jQuery to work on all `post_types`.
+
 = Version 0.1.4 (5/17/11) =
 
 * Fixed jQuery bug.

@@ -33,7 +33,7 @@ jQuery(document).ready(
 			$Controls.selects.bind('click change', preview);
 			
 			/* Advanced dropdown */
-			$('#youtube-white-label-post-meta-box p:not(#youtube-white-label-post-meta-box p:first-child, #youtube-white-label-post-meta-box p.output, #youtube-white-label-post-meta-box p.howto, #youtube-white-label-post-meta-box p.youtube-advanced-wrap)').appendTo('#youtube-advanced');
+			$('#youtube-white-label-' + post_type + '-meta-box p:not(#youtube-white-label-' + post_type + '-meta-box p:first-child, #youtube-white-label-' + post_type + '-meta-box p.output, #youtube-white-label-' + post_type + '-meta-box p.howto, #youtube-white-label-' + post_type + '-meta-box p.youtube-advanced-wrap)').appendTo('#youtube-advanced');
 			$('a.youtube-advanced').click( function(e) {
 				e.preventDefault();
 				$('#youtube-advanced').slideToggle('slow');
