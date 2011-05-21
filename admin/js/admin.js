@@ -3,9 +3,9 @@ function preview() {
 	jQuery('input[name^="_YouTube_"],select[name^="_YouTube_"]').each(function() {		
 		var Version = jQuery.fn.jquery;
 		if( Version > '1.6' )
-			var ThisID = jQuery(this).prop("name").replace('_YouTube_', '').toLowerCase();
+			var ThisID = jQuery(this).prop('name').replace('_YouTube_', '').toLowerCase();
 		else
-			var ThisID = jQuery(this).prop("name").replace('_YouTube_', '').toLowerCase();
+			var ThisID = jQuery(this).attr('name').replace('_YouTube_', '').toLowerCase();
 		Values.push(ThisID + '="' + jQuery(this).val() + '"');
 	});
 	jQuery('#_YouTube_output').html('[youtube-white-label ' + Values.join(' ') + ' /]');

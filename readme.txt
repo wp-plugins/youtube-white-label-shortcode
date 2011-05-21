@@ -41,6 +41,10 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.1.6 (5/21/11) =
+
+* Fixed jQuery output, again. This time fixed what I overwrote from `0.1.1` update.
+
 = Version 0.1.5 (5/18/11) =
 
 * Fixed admin jQuery to work on all `post_types`.
