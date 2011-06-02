@@ -41,6 +41,10 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.1.7 (6/1/11) =
+
+* For some reason YouTube&trade; started auto-playing videos whether or not the `autoplay` parameter was set to `0` (false). But if not there it doesn't auto-play. So this update fixes that untill they fix it or change it again.
+
 = Version 0.1.6 (5/21/11) =
 
 * Fixed jQuery output, again. This time fixed what I overwrote from `0.1.1` update.
