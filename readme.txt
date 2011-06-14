@@ -19,6 +19,8 @@ Alternativly you can modify the shortcode yourself, where `1` is true and `0` is
 
 For question please visit my blog @ [http://austinpassy.com](http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/)
 
+Additional controls listed [on Google code](http://code.google.com/apis/youtube/player_parameters.html?playerVersion=HTML5).
+
 ALERT: `[youtube-embed]` is going to be replaced with `[youtube-white-label]`.
 
 == Installation ==
@@ -40,6 +42,11 @@ Follow the steps below to install the plugin.
 2. A YouTube&trade; video without controls.
 
 == Changelog ==
+
+= Version 0.1.8 (6/13/11) =
+
+* Updated for the new [HD preview image](http://youtube-global.blogspot.com/2011/06/next-step-in-embedded-videos-hd-preview.html).
+* A few new shortcode values: `border`, `cc_load_policy`, `color1`, `color2`, `disablekb`, `fs`, `branding`.
 
 = Version 0.1.7 (6/1/11) =
 

@@ -3,7 +3,7 @@
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
- * Version: 0.1.7
+ * Version: 0.1.8
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austinpassy.com
  * Text Domain: youtube-white-label
@@ -36,7 +36,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 	class YouTube_White_Label_Shortcode {
 		
 		static $white_label_script;
-		const version = '0.1.7';
+		const version = '0.1.8';
 		const domain  = 'youtube-white-label';
 		
 		function YouTube_White_Label_Shortcode() {
@@ -119,18 +119,25 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		function shortcode( $attr ) {
 			
 			extract( shortcode_atts( array(
-				'url'		=> '',
-				'id'		=> '',
-				'height'	=> '',
-				'width'		=> '',
-				'autohide' 	=> '1',
-				'autoplay' 	=> '',
-				'controls' 	=> '0',
-				'hd' 		=> '0',
-				'rel' 		=> '0',
-				'showinfo' 	=> '0',
-				'thanks' 	=> '1',
-				'autosize'	=> '1',
+				'url'				=> '',
+				'id'				=> '',
+				'height'			=> '',
+				'width'				=> '',
+				'autohide' 			=> '1',
+				'autoplay' 			=> '',
+				'controls' 			=> '0',
+				'branding'			=> '1',
+				'hd' 				=> '0',
+				'rel' 				=> '0',
+				'showinfo' 			=> '0',
+				'thanks' 			=> '1',
+				'autosize'			=> '1',
+				'border'			=> '0',
+				'cc'				=> '0',
+				'color1'			=> '',
+				'color2'			=> '',
+				'disablekb'			=> '',
+				'fullscreen'		=> '0',
 			), $attr ) );
 			
 			if ( !empty( $autosize ) && $autosize == '1' )				
@@ -159,6 +166,22 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 					$iframe .= '&amp;rel=' . $rel;
 				if ( $showinfo != '' )
 					$iframe .= '&amp;showinfo=' . $showinfo;
+				if ( $border != '' )
+					$iframe .= '&amp;border=' . $border;
+				if ( $cc != '' )
+					$iframe .= '&amp;cc_load_policy=' . $cc;
+					
+				if ( $color1 != '' )
+					$iframe .= '&amp;color1=' . $color1;
+				if ( $color2 != '' )
+					$iframe .= '&amp;color2=' . $color2;
+					
+				if ( $fullscreen != '' )
+					$iframe .= '&amp;fullscreen=' . $fullscreen;
+				if ( !empty( $disablekb ) && $disablekb != '0' )
+					$iframe .= '&amp;disablekb=' . $disablekb;
+				if ( $branding != '' )
+					$iframe .= '&amp;modestbranding=' . $branding;
 				$iframe .= '" ';	
 				
 				$iframe .= 'style="border:0; height:' . esc_attr( absint( $height ) ) . 'px; width:' . esc_attr( absint( $width ) ) . 'px">';			
@@ -226,6 +249,9 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			$meta['controls'] = array( 'name' => '_YouTube_controls', 'title' => __( 'Controls:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
 				'description' => __( 'The video controls, seen at the bottom of the player.', self::domain ) );
 			
+			$meta['branding'] = array( 'name' => '_YouTube_branding', 'title' => __( 'YouTube Logo:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Hide the YouTube&trade; logo?', self::domain ) );
+			
 			$meta['hd'] = array( 'name' => '_YouTube_hd', 'title' => __( 'High Def:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
 				'description' => __( 'Auto start in <abbr title="High Definition">HD</abbr>.', self::domain ) );
 			
@@ -240,6 +266,24 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			
 			$meta['autosize'] = array( 'name' => '_YouTube_autosize', 'title' => __( 'Autosize:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
 				'description' => __( 'Include a jQuery file to &ldquo;autosize&rdquo; the video to fit the content?', self::domain ) );
+			
+			$meta['border'] = array( 'name' => '_YouTube_border', 'title' => __( 'Border:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( 'Give your player a colored border? (uses <code>color1</code> and <code>color2</code> options)', self::domain ) );
+			
+			$meta['cc_load_policy'] = array( 'name' => '_YouTube_cc', 'title' => __( 'Closed Captions:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( 'Setting to true will cause closed captions to be shown by default, even if the user has turned captions off.', self::domain ) );
+			
+			$meta['color1'] = array( 'name' => '_YouTube_color1', 'title' => __( 'Color1:', self::domain ), 'type' => 'input', 'width' => '90px', 'value' => '',
+				'description' => __( 'Set your primary color.', self::domain ) );
+			
+			$meta['color2'] = array( 'name' => '_YouTube_color2', 'title' => __( 'Color2:', self::domain ), 'type' => 'input', 'width' => '90px', 'value' => '',
+				'description' => __( 'Set your secondary color.', self::domain ) );
+			
+			$meta['disablekb'] = array( 'name' => '_YouTube_disablekb', 'title' => __( 'Disable Keyboard:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Disable the keyboard shortcuts?', self::domain ) );
+			
+			$meta['fullscreen'] = array( 'name' => '_YouTube_fullscreen', 'title' => __( 'Fullscreen:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Allow fullscreen button?', self::domain ) );
 		
 			return $meta;
 		}
