@@ -12,14 +12,14 @@ A simple shortcode to embed white label YouTube videos using the latest iframe H
 
 This plugin adds the shortcode `[youtube-white-label]` and allows you to input any YouTube&trade; video (that allows embeding outsite the YouTube&trade; domain) with control over the logo, player, autostart and more.
 
-A shortcode generator has been added to all public $post_type add and edit screens. You can modify the options and it will output the correct shortcode arguments.
+A shortcode generator has been added to all public `$post_type` edit screens. You can modify the options in the included metabox and it will output the correct shortcode arguments.
 
 Alternativly you can modify the shortcode yourself, where `1` is true and `0` is false:
-`[youtube-white-label id="" height="350" width="600" autohide="1" autoplay="0" controls="0" hd="1" rel="0" showinfo="0" autoaize="1" /]`
+`[youtube-white-label id="" height="" width="" autohide="1" autoplay="0" controls="0" branding="1" hd="1" rel="0" showinfo="0" thanks="1" autosize="1" border="0" cc="0" disablekb="1" fullscreen="1" /]`
 
 For question please visit my blog @ [http://austinpassy.com](http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/)
 
-Additional controls listed [on Google code](http://code.google.com/apis/youtube/player_parameters.html?playerVersion=HTML5).
+Additional controls listed [on Google code](http://code.google.com/apis/youtube/player_parameters.html?playerVersion=HTML5) *for the terminology of each shortcode argument*.
 
 ALERT: `[youtube-embed]` is going to be replaced with `[youtube-white-label]`.
 
@@ -42,6 +42,13 @@ Follow the steps below to install the plugin.
 2. A YouTube&trade; video without controls.
 
 == Changelog ==
+
+= Version 0.1.9 (6/16/11) =
+
+* Spelling error in the readme shortcode.
+* All new argument options shown in readme.
+* Testing out auto `height` and `width` options if those argument are left empty. Will use `$content_width`.
+* [bug] Color codes.
 
 = Version 0.1.8 (6/13/11) =
 

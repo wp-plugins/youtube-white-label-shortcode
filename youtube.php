@@ -3,7 +3,7 @@
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
- * Version: 0.1.8
+ * Version: 0.1.9
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austinpassy.com
  * Text Domain: youtube-white-label
@@ -117,6 +117,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		 * @use [youtube-white-label id=""]
 		 */
 		function shortcode( $attr ) {
+			global $content_width;
 			
 			extract( shortcode_atts( array(
 				'url'				=> '',
@@ -134,8 +135,8 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				'autosize'			=> '1',
 				'border'			=> '0',
 				'cc'				=> '0',
-				'color1'			=> '',
-				'color2'			=> '',
+				'colorone'			=> '',
+				'colortwo'			=> '',
 				'disablekb'			=> '',
 				'fullscreen'		=> '0',
 			), $attr ) );
@@ -171,10 +172,10 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				if ( $cc != '' )
 					$iframe .= '&amp;cc_load_policy=' . $cc;
 					
-				if ( $color1 != '' )
-					$iframe .= '&amp;color1=' . $color1;
-				if ( $color2 != '' )
-					$iframe .= '&amp;color2=' . $color2;
+				if ( $colorone != '' )
+					$iframe .= '&amp;color1=' . $colorone;
+				if ( $colortwo != '' )
+					$iframe .= '&amp;color2=' . $colortwo;
 					
 				if ( $fullscreen != '' )
 					$iframe .= '&amp;fullscreen=' . $fullscreen;
@@ -182,13 +183,16 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 					$iframe .= '&amp;disablekb=' . $disablekb;
 				if ( $branding != '' )
 					$iframe .= '&amp;modestbranding=' . $branding;
-				$iframe .= '" ';	
+				$iframe .= '" ';
 				
-				$iframe .= 'style="border:0; height:' . esc_attr( absint( $height ) ) . 'px; width:' . esc_attr( absint( $width ) ) . 'px">';			
+				$h = ( isset( $height ) && !empty( $height ) ) ? $height : ( $content_width / 1.77 );
+				$w = ( isset( $width ) && !empty( $width ) ) ? $width : $content_width;
+				
+				$iframe .= 'style="border:0; height:' . esc_attr( absint( $h ) ) . 'px; width:' . esc_attr( absint( $w ) ) . 'px">';			
 				$iframe .= '</iframe>';
 				
 				if ( empty( $thanks ) || $thanks == '1' )
-					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __('Powered by YouTube White Label Shortcode', self::domain ) . '">White Label</a></span>';
+					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __( 'Powered by YouTube White Label Shortcode', self::domain ) . '">White Label</a></span>';
 				
 				$iframe .= '</p>';
 			}			
@@ -273,10 +277,10 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			$meta['cc_load_policy'] = array( 'name' => '_YouTube_cc', 'title' => __( 'Closed Captions:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
 				'description' => __( 'Setting to true will cause closed captions to be shown by default, even if the user has turned captions off.', self::domain ) );
 			
-			$meta['color1'] = array( 'name' => '_YouTube_color1', 'title' => __( 'Color1:', self::domain ), 'type' => 'input', 'width' => '90px', 'value' => '',
+			$meta['colorone'] = array( 'name' => '_YouTube_colorone', 'title' => __( 'Color1:', self::domain ), 'type' => 'text', 'width' => '90px', 'value' => '',
 				'description' => __( 'Set your primary color.', self::domain ) );
 			
-			$meta['color2'] = array( 'name' => '_YouTube_color2', 'title' => __( 'Color2:', self::domain ), 'type' => 'input', 'width' => '90px', 'value' => '',
+			$meta['colortwo'] = array( 'name' => '_YouTube_colortwo', 'title' => __( 'Color2:', self::domain ), 'type' => 'text', 'width' => '90px', 'value' => '',
 				'description' => __( 'Set your secondary color.', self::domain ) );
 			
 			$meta['disablekb'] = array( 'name' => '_YouTube_disablekb', 'title' => __( 'Disable Keyboard:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
