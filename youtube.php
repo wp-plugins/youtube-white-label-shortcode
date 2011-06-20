@@ -3,7 +3,7 @@
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
- * Version: 0.1.9
+ * Version: 0.2
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austinpassy.com
  * Text Domain: youtube-white-label
@@ -86,7 +86,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		
 		function admin_scripts() {
 			global $pagenow;
-			if ( $pagenow == 'post.php' || $pagenow == 'post-new.php' )
+			if ( ( $pagenow == 'post.php' || $pagenow == 'post-new.php' ) && !defined( 'IFRAME_REQUEST' ) )
 				wp_enqueue_script( self::domain . '-admin', plugins_url( 'admin/js/admin.js', __FILE__ ), array( 'jquery' ), self::version, false );
 		}
 		
@@ -153,36 +153,49 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				$iframe .= '<iframe id="' . self::domain . '" type="text/html" ';				
 				$iframe .= 'src="http://www.youtube.com/embed/' . esc_attr( $id ) . '?';
 				
+				/* Branding option must be first in line */
+				if ( $branding != '' )
+					$iframe .= '&amp;modestbranding=' . $branding;
+					
 				if ( $autohide != '' )
 					$iframe .= '&amp;autohide=' . $autohide;
+					
 				if ( $autoplay != '' && $autoplay == '1' ) 
 					$iframe .= '&amp;autoplay=' . $autoplay;
-				else
-					$iframe .= '';
+					
 				if ( $controls != '' )
 					$iframe .= '&amp;controls=' . $controls;
+					
 				if ( $hd != '' )
 					$iframe .= '&amp;hd=' . $hd;
+					
 				if ( $rel != '' )
 					$iframe .= '&amp;rel=' . $rel;
-				if ( $showinfo != '' )
+					
+				if ( $showinfo == '1' )
 					$iframe .= '&amp;showinfo=' . $showinfo;
+					
 				if ( $border != '' )
 					$iframe .= '&amp;border=' . $border;
+					
 				if ( $cc != '' )
 					$iframe .= '&amp;cc_load_policy=' . $cc;
 					
 				if ( $colorone != '' )
 					$iframe .= '&amp;color1=' . $colorone;
+					
 				if ( $colortwo != '' )
 					$iframe .= '&amp;color2=' . $colortwo;
 					
 				if ( $fullscreen != '' )
 					$iframe .= '&amp;fullscreen=' . $fullscreen;
+					
 				if ( !empty( $disablekb ) && $disablekb != '0' )
 					$iframe .= '&amp;disablekb=' . $disablekb;
-				if ( $branding != '' )
-					$iframe .= '&amp;modestbranding=' . $branding;
+					
+				if ( $showinfo == '1' && $branding == '0' )
+					$iframe .= '&amp;title=';
+					
 				$iframe .= '" ';
 				
 				$h = ( isset( $height ) && !empty( $height ) ) ? $height : ( $content_width / 1.77 );
@@ -192,7 +205,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				$iframe .= '</iframe>';
 				
 				if ( empty( $thanks ) || $thanks == '1' )
-					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __( 'Powered by YouTube White Label Shortcode', self::domain ) . '">White Label</a></span>';
+					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __( 'Powered by YouTube White Label Shortcode', self::domain ) . '" rel="bookmark">White Label</a></span>';
 				
 				$iframe .= '</p>';
 			}			

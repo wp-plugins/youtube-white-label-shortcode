@@ -43,6 +43,11 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.2 (6/20/11) =
+
+* Updated `modestbranding` to be the first parameter (so the YouTube logo stays hidden).
+* Aded parameter `&title=` when showinfo is active and branding is active to keep the YouTube logo hidden.
+
 = Version 0.1.9 (6/16/11) =
 
 * Spelling error in the readme shortcode.
