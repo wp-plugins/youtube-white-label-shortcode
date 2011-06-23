@@ -3,7 +3,7 @@
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
- * Version: 0.2
+ * Version: 0.2.1.1
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austinpassy.com
  * Text Domain: youtube-white-label
@@ -36,7 +36,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 	class YouTube_White_Label_Shortcode {
 		
 		static $white_label_script;
-		const version = '0.1.8';
+		const version = '0.2.1.1';
 		const domain  = 'youtube-white-label';
 		
 		function YouTube_White_Label_Shortcode() {
@@ -75,7 +75,9 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			define( 'YOUTUBE_WLS_DIR', plugin_dir_path( __FILE__ ) );
 			define( 'YOUTUBE_WLS_ADMIN', plugin_dir_path( __FILE__ ) . '/admin' );
 			
-			if ( is_admin() ) {
+			$dashboard = get_option( 'remove_youtube_white_label_dashboard' );
+			
+			if ( is_admin() && ( empty( $dashboard ) && $dashboard != '1' )  ) {
 				require_once( trailingslashit( YOUTUBE_WLS_ADMIN ) . 'dashboard.php' );
 			}
 		}
@@ -124,10 +126,10 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				'id'				=> '',
 				'height'			=> '',
 				'width'				=> '',
+				'branding'			=> '1',
 				'autohide' 			=> '1',
 				'autoplay' 			=> '',
 				'controls' 			=> '0',
-				'branding'			=> '1',
 				'hd' 				=> '0',
 				'rel' 				=> '0',
 				'showinfo' 			=> '0',
@@ -150,7 +152,11 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			$iframe = '';
 			if ( !empty( $id ) ) {
 				$iframe  = '<p>';
-				$iframe .= '<iframe id="' . self::domain . '" type="text/html" ';				
+				$iframe .= '<iframe id="' . self::domain . '" type="text/html" ';
+				
+				if ( $autosize == '1' )
+					$iframe .= 'class="autosize" ';
+					
 				$iframe .= 'src="http://www.youtube.com/embed/' . esc_attr( $id ) . '?';
 				
 				/* Branding option must be first in line */

@@ -15,7 +15,7 @@ This plugin adds the shortcode `[youtube-white-label]` and allows you to input a
 A shortcode generator has been added to all public `$post_type` edit screens. You can modify the options in the included metabox and it will output the correct shortcode arguments.
 
 Alternativly you can modify the shortcode yourself, where `1` is true and `0` is false:
-`[youtube-white-label id="" height="" width="" autohide="1" autoplay="0" controls="0" branding="1" hd="1" rel="0" showinfo="0" thanks="1" autosize="1" border="0" cc="0" disablekb="1" fullscreen="1" /]`
+`[youtube-white-label id="" height="" width="" branding="1" autohide="1" autoplay="0" controls="0" hd="1" rel="0" showinfo="0" autosize="1" border="0" cc="0" disablekb="1" fullscreen="1" /]`
 
 For question please visit my blog @ [http://austinpassy.com](http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/)
 
@@ -42,6 +42,14 @@ Follow the steps below to install the plugin.
 2. A YouTube&trade; video without controls.
 
 == Changelog ==
+
+= Version 0.2.1.1 (6/23/11) =
+
+* Add `remove_youtube_white_label_dashboard` to your options and set to `1` if you'd like the dashboard widget removed.
+
+= Version 0.2.1 (6/21/11) =
+
+* Added `autosize` class to iframe allowing more than one video to be shown with each able to automatically ajust size or not.
 
 = Version 0.2 (6/20/11) =
 
