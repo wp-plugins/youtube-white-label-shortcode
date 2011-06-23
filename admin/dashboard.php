@@ -70,8 +70,8 @@ if ( !function_exists( 'thefrosty_dashboard_widget_rss' ) ) {
                     	<span class="<?php echo $class; ?>">&nbsp;</span>
                     </div>
 					<li>		
-						<a class="rsswidget" href="<?php echo $item->get_permalink(); ?>" title="<?php echo $item->get_description(); ?>"><?php echo $item->get_title(); ?></a>		
-						<span style="font-size:10px; color:#aaa;"><?php echo $item->get_date('F, jS Y'); ?></span>		
+						<a class="rsswidget" href="<?php echo esc_url( $item->get_permalink() ); ?>" title="<?php echo esc_attr( $item->get_description() ); ?>"><?php echo esc_attr( $item->get_title() ); ?></a>		
+						<span style="font-size:10px; color:#aaa;"><?php echo esc_attr( $item->get_date('F, jS Y') ); ?></span>		
 					</li>		
 				<?php endforeach;
 			}

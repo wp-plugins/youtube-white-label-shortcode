@@ -43,6 +43,10 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.2.2 (6/23/11) =
+
+* [BUG FIX] An error in the dashboard widget is casuing some larg images. Sorry.
+
 = Version 0.2.1.1 (6/23/11) =
 
 * Add `remove_youtube_white_label_dashboard` to your options and set to `1` if you'd like the dashboard widget removed.
