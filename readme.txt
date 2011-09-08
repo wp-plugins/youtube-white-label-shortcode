@@ -43,6 +43,10 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.2.3 (9/8/11) =
+
+* Dashboard fix.
+
 = Version 0.2.2 (6/23/11) =
 
 * [BUG FIX] An error in the dashboard widget is casuing some larg images. Sorry.
@@ -108,6 +112,9 @@ Follow the steps below to install the plugin.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 0.2.2 =
+Important! Unescaping characters in the dashboard widget/
 
 = 0.1.1 =
 

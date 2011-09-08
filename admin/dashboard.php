@@ -19,12 +19,12 @@ if ( !function_exists( 'thefrosty_dashboard_widget_rss' ) ) {
 			//echo '<a href="http://frosty.me/cl"><img style="float:right; margin: 0 0 5px 5px;" src="' . plugin_dir_url( __FILE__ ) . '/Austin_Passy.jpg" alt="frosty" /></a>';
 			$style  = '<style type="text/css">';
 			$style .= '.frosty .frosty-image { display:inline-block; height:25px; float:left; width:25px; overflow:hidden }' . "\n";
-			$style .= '.frosty .frosty-image span { background:url("' . plugin_dir_url( __FILE__ ) . 'Sprite.jpg") 0 0 no-repeat; display: inline-block; height: 25px; width: 25px }' . "\n";
+			$style .= '.frosty .frosty-image span { background:url("' . esc_url( plugin_dir_url( __FILE__ ) ) . 'Sprite.jpg") 0 0 no-repeat; display: inline-block; height: 25px; width: 25px }' . "\n";
 			$style .= '.frosty li { padding-left:30px }' . "\n";
 			$style .= 'span.austinpassy { background-position: -31px 0 !important }' . "\n";
 			$style .= 'span.jeanaarter { background-position: -60px 0 !important }' . "\n";
 			$style .= 'span.wordcamp { background-position: -92px 0 !important }' . "\n";
-			$style .= 'span.floaoholics { background-position: -124px 0 !important }' . "\n";
+			$style .= 'span.floatoholics { background-position: -124px 0 !important }' . "\n";
 			$style .= 'span.themelit { background-position: -156px 0 !important }' . "\n";
 			$style .= 'span.greatescapecabofishing { background-position: -193px 0 !important }' . "\n";
 			$style .= 'span.wpworkshop { background-position: -221px 0 !important }' . "\n";
