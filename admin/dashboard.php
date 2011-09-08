@@ -59,7 +59,7 @@ if ( !function_exists( 'thefrosty_dashboard_widget_rss' ) ) {
 					
 					$class = str_replace( 'http://', '', $item->get_permalink() ); 
 					$class = str_replace( array( '2010.', '2011.', '2012.', '2014.' ), '', $class );
-					$class = str_replace( array( '.com/', '.net/', '.org/', '.la/' ), ' ', $class );
+					$class = str_replace( array( '.com/', '.net/', '.org/', '.la/', 'la.' ), ' ', $class );
 					$class = str_replace( array( '2011/', '2012/', '2013/', '2014/' ), '', $class );
 					$class = str_replace( array( '01/', '02/', '03/', '04/', '05/', '06/', '07/', '08/', '09/', '10/', '11/', '12/' ), '', $class );
 					$class = str_replace( $title, '', $class );
@@ -71,7 +71,7 @@ if ( !function_exists( 'thefrosty_dashboard_widget_rss' ) ) {
                     </div>
 					<li>		
 						<a class="rsswidget" href="<?php echo esc_url( $item->get_permalink() ); ?>" title="<?php echo esc_attr( $item->get_description() ); ?>"><?php echo esc_attr( $item->get_title() ); ?></a>		
-						<span style="font-size:10px; color:#aaa;"><?php echo esc_attr( $item->get_date('F, jS Y') ); ?></span>		
+						<span style="font-size:10px; color:#aaa;"><?php echo esc_attr( $item->get_date('F, jS Y') ); ?></span>			
 					</li>		
 				<?php endforeach;
 			}
