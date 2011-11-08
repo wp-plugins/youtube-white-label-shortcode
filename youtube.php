@@ -36,7 +36,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 	class YouTube_White_Label_Shortcode {
 		
 		static $white_label_script;
-		const version = '0.2.2';
+		const version = '0.2.3';
 		const domain  = 'youtube-white-label';
 		
 		function YouTube_White_Label_Shortcode() {
