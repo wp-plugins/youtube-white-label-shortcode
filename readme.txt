@@ -43,6 +43,11 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.2.5 (12/26/11) =
+
+* Updated admin scripts to be called on `admin_enqueue_scripts` (3.3).
+* Cleaned up some output code.
+
 = Version 0.2.4 (11/8/11) =
 
 * Feeds updated.
@@ -117,6 +122,9 @@ Follow the steps below to install the plugin.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 0.2.5 =
+Happy Holidays! Love &mdash;Frosty
 
 = 0.2.2 =
 Important! Unescaping characters in the dashboard widget/
