@@ -3,7 +3,7 @@ Contributors: austyfrosty
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XQRHECLPQ46TE
 Tags: YouTube, shortcode, White Label, YouTube White Label, embed
 Requires at least: 3.0
-Tested up to: 3.3
+Tested up to: 3.5
 Stable tag: trunk
 
 A simple shortcode to embed white label YouTube videos using the latest iframe HTML5 embed.
@@ -14,6 +14,8 @@ This plugin adds the shortcode `[youtube-white-label]` and allows you to input a
 
 A shortcode generator has been added to all public `$post_type` edit screens. You can modify the options in the included metabox and it will output the correct shortcode arguments.
 
+If you'd like to remove the meta box from a certain `$post_type` use the `remove_youtube_white_label_meta_box` filter.
+
 Alternativly you can modify the shortcode yourself, where `1` is true and `0` is false:
 `[youtube-white-label id="" height="" width="" branding="1" autohide="1" autoplay="0" controls="0" hd="1" rel="0" showinfo="0" autosize="1" border="0" cc="0" disablekb="1" fullscreen="1" /]`
 
@@ -21,7 +23,7 @@ For question please visit my blog @ [http://austinpassy.com](http://austinpassy.
 
 Additional controls listed [on Google code](http://code.google.com/apis/youtube/player_parameters.html?playerVersion=HTML5) *for the terminology of each shortcode argument*.
 
-ALERT: `[youtube-embed]` is going to be replaced with `[youtube-white-label]`.
+*Compatible with the newest Video SEO plugin by Yoast.com (> 1.4.2)*
 
 == Installation ==
 
@@ -42,6 +44,14 @@ Follow the steps below to install the plugin.
 2. A YouTube&trade; video without controls.
 
 == Changelog ==
+
+= Version 0.2.6 (12/3/13) =
+
+* Added filter to remove metabox from $post_type `remove_youtube_white_label_meta_box`
+* Updated dashboard.
+* Cleaned up settings.
+* Updated jQuery
+* Tested against 3.5
 
 = Version 0.2.5 (12/26/11) =
 

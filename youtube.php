@@ -3,7 +3,7 @@
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
- * Version: 0.2.5
+ * Version: 0.2.6
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austinpassy.com
  * Text Domain: youtube-white-label
@@ -27,7 +27,7 @@
 
 if ( !function_exists( 'youtube_white_label_shortcode' ) ) {
 	function youtube_white_label_shortcode() {
-		$plugin = new YouTube_White_Label_Shortcode();
+		$youtube_white_label_shortcode = new YouTube_White_Label_Shortcode();
 	}
 	add_action( 'plugins_loaded', 'youtube_white_label_shortcode' );
 }
@@ -36,45 +36,28 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 	class YouTube_White_Label_Shortcode {
 		
 		static $white_label_script;
-		const version = '0.2.5';
+		const version = '0.2.6';
 		const domain  = 'youtube-white-label';
 		
-		function YouTube_White_Label_Shortcode() {
-			$this->__construct();
-		}
-		
 		function __construct() {
-			register_activation_hook( __FILE__, array( __CLASS__, 'activate' ) );
+			add_action( 'init', 					array( __CLASS__, 'init' ) );
+			add_action( 'init', 					array( __CLASS__, 'locale' ) );
 			
-			add_action( 'extra_theme_headers', array( __CLASS__, 'extra_theme_headers' ) );
-			add_action( 'init', array( __CLASS__, 'activate' ) );
-			add_action( 'init', array( __CLASS__, 'locale' ) );
-			
-			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_scripts' ) );
-			add_action( 'wp_print_footer_scripts', array( __CLASS__, 'scripts' ) );
-			//add_action( 'admin_init', array( __CLASS__, 'styles' ) );
+			add_action( 'admin_enqueue_scripts', 	array( __CLASS__, 'enqueue_scripts' ) );
+			add_action( 'wp_print_footer_scripts', 	array( __CLASS__, 'scripts' ) );
+			//add_action( 'admin_init', 			array( __CLASS__, 'styles' ) );
 			
 			/* Add the post meta box creation function to the 'admin_menu' hook. */
-			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
-			add_action( 'admin_menu', array( __CLASS__, 'add_meta_box' ) );
+			add_action( 'add_meta_boxes', 			array( __CLASS__, 'add_meta_box' ) );
+			add_action( 'admin_menu', 				array( __CLASS__, 'add_meta_box' ) );
 			
-			add_shortcode( 'youtube-embed', array( __CLASS__, 'shortcode' ) );
-			add_shortcode( self::domain, array( __CLASS__, 'shortcode' ) );
+			add_shortcode( self::domain, 			array( __CLASS__, 'shortcode' ) );
 		}
 		
-		/**
-		 * @since 0.1.2
-		 */
-		function extra_theme_headers( $headers ) {
-			$headers['Domain'] = 'Text Domain';
-		
-			return $headers;
-		}
-		
-		function activate() {
+		function init() {
 			define( 'YOUTUBE_WLS_DIR', plugin_dir_path( __FILE__ ) );
-			define( 'YOUTUBE_WLS_ADMIN', plugin_dir_path( __FILE__ ) . '/admin' );
-			
+			define( 'YOUTUBE_WLS_ADMIN', trailingslashit( plugin_dir_path( __FILE__ ) ) . 'admin' );
+			print_r( get_option( 'remove_youtube_white_label_dashboard' ) );
 			$dashboard = get_option( 'remove_youtube_white_label_dashboard' );
 			
 			if ( is_admin() && ( empty( $dashboard ) && $dashboard != '1' )  ) {
@@ -86,7 +69,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			load_plugin_textdomain( self::domain, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 		
-		function admin_scripts() {
+		function enqueue_scripts() {
 			global $pagenow;
 			if ( ( $pagenow == 'post.php' || $pagenow == 'post-new.php' ) && !defined( 'IFRAME_REQUEST' ) ) {
 				wp_enqueue_script( self::domain . '-admin', plugins_url( 'admin/js/admin.js', __FILE__ ), array( 'jquery' ), self::version, false );
@@ -152,7 +135,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			
 			$iframe = '';
 			if ( !empty( $id ) ) {
-				$iframe  = '<p>';
+				
 				$iframe .= '<iframe id="' . self::domain . '" type="text/html" ';
 				
 				if ( !empty( $autosize ) && $autosize == '1' )
@@ -214,9 +197,24 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				if ( isset( $thanks ) && ( empty( $thanks ) || $thanks != '0' ) )
 					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __( 'Powered by YouTube White Label Shortcode', self::domain ) . '" rel="bookmark">White Label</a></span>';
 				
-				$iframe .= '</p>';
 			}			
-			return $iframe;
+			return wpautop( $iframe );
+		}
+		
+		function strip_url( $url ) {
+			$id_match = '[0-9a-zA-Z\-_]+';
+			if ( preg_match( '|https?://(www\.)?youtube\.com/(watch)?\?.*v=(' . $id_match . ')|', $url, $matches ) )
+				$id = $matches[3];
+			else if ( preg_match( '|https?://(www\.)?youtube(-nocookie)?\.com/embed/(' . $id_match . ')|', $url, $matches ) )
+				$id = $matches[3];
+			else if ( preg_match( '|https?://(www\.)?youtube\.com/v/(' . $id_match . ')|', $url, $matches ) )
+				$id = $matches[2];
+			else if ( preg_match( '|http://youtu\.be/(' . $id_match . ')|', $url, $matches ) )
+				$id = $matches[1];
+			else if ( !preg_match( '|^http|', $url, $matches ) )
+				$id = $url;
+			
+			return $id;
 		}
 
 		/**
@@ -230,7 +228,9 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		function add_meta_box() {		
 			/* Gets available public post types. */
 			$post_types = get_post_types( array( 'public' => true ), 'objects' );
-		
+			
+			$post_types = apply_filters( 'remove_youtube_white_label_meta_box', $post_types );
+			
 			/* For each available post type, create a meta box on its edit page if it supports '$prefix-post-settings'. */
 			foreach ( $post_types as $type ) {
 				/* Add the meta box. */
@@ -339,6 +339,8 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				<span id="_YouTube_output" class="postbox" style="display:block; min-height: 50px; padding: 5px;"></span>
 			</p>
             
+			<!--<a id="youtube-send-to-content" href="#"><?php _e( 'send to content', self::domain ); ?></a>-->
+                
             <div id="youtube-colorpicker"></div>
             
 			<p class="howto" style="text-align:right"><a class="frosty" href="#"><?php _e( 'Like this plugin?, donate', self::domain ); ?></a></p>
