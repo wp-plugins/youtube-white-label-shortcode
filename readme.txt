@@ -45,6 +45,10 @@ Follow the steps below to install the plugin.
 
 == Changelog ==
 
+= Version 0.2.6.1 (12/6/12)
+
+* PHP > 5.3 error.
+
 = Version 0.2.6 (12/3/13) =
 
 * Added filter to remove metabox from $post_type `remove_youtube_white_label_meta_box`
