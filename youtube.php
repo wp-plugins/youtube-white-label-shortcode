@@ -57,7 +57,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		function init() {
 			define( 'YOUTUBE_WLS_DIR', plugin_dir_path( __FILE__ ) );
 			define( 'YOUTUBE_WLS_ADMIN', trailingslashit( plugin_dir_path( __FILE__ ) ) . 'admin' );
-			print_r( get_option( 'remove_youtube_white_label_dashboard' ) );
+			//print_r( get_option( 'remove_youtube_white_label_dashboard' ) );
 			$dashboard = get_option( 'remove_youtube_white_label_dashboard' );
 			
 			if ( is_admin() && ( empty( $dashboard ) && $dashboard != '1' )  ) {
