@@ -4,14 +4,10 @@ function preview() {
 		ThisID,
 		Values = [];
 		
-	jQuery('input[name^="_YouTube_"],select[name^="_YouTube_"]').each(function() {		
-		Version = jQuery.fn.jquery;
-		$this	= jQuery(this);
+	jQuery('input[name^="_YouTube_"],select[name^="_YouTube_"]').each(function() {
+		$this = jQuery(this);
 				
-		if( Version > '1.6' )
-			ThisID = $this.prop('name').replace('_YouTube_', '').toLowerCase();
-		else
-			ThisID = $this.attr('name').replace('_YouTube_', '').toLowerCase();
+		ThisID = $this.prop('name').replace('_YouTube_', '').toLowerCase();
 		
 		Values.push(ThisID + '="' + $this.val() + '"');
 	});
@@ -21,8 +17,8 @@ function preview() {
 jQuery(document).ready(
 	function($) {
 		var post_type 	= $('[name="post_type"]').val();
-		var meta_box	= $('#youtube-white-label-' + post_type + '-meta-box').length;
-		if( meta_box > 0 ) {
+		var meta_box	= $('#youtube-white-label-' + post_type + '-meta-box');
+		if ( meta_box.length ) {
 	
 			var $Controls = {
 				"inputs" 	: $('input[name^="_YouTube_"]'), 
@@ -44,12 +40,6 @@ jQuery(document).ready(
 			$('a.youtube-advanced').on('click', function(e) {
 				e.preventDefault();
 				$('#youtube-advanced').slideToggle();
-			});
-			
-			/* Donate dropdown */
-			$('a.frosty').click( function(e) {
-				e.preventDefault();
-				$('#frosty').slideToggle('slow');
 			});
 		
 		} // end meta_box

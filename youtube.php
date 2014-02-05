@@ -1,22 +1,22 @@
 <?php
 /**
  * Plugin Name: YouTube White Label Shortcode
- * Plugin URI: http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/
+ * Plugin URI: http://austin.passy.co/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
- * Version: 0.2.6.1
+ * Version: 0.3
  * Author: Austin &ldquo;Frosty&rdquo; Passy
- * Author URI: http://austinpassy.com
+ * Author URI: http://austin.passy.co/
  * Text Domain: youtube-white-label
  *
  * Developers can learn more about the WordPress shortcode API:
  * @link http://codex.wordpress.org/Shortcode_API
  *
- * @copyright 2011-2012
+ * @copyright 2011-2014
  * @author Austin Passy
- * @link http://austinpassy.com/2011/05/announcing-youtube-white-label-shortcode-plugin/
+ * @link 	http://austin.passy.co/2011/05/announcing-youtube-white-label-shortcode-plugin/
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * @help http://scribu.net/wordpress/optimal-script-loading.html
- * @ref http://bavotasan.com/tutorials/jquery-to-resize-videos/#comment-26200
+ * @help 	http://scribu.net/wordpress/optimal-script-loading.html
+ * @ref 	http://bavotasan.com/tutorials/jquery-to-resize-videos/#comment-26200
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,54 +25,65 @@
  * @package YouTube_White_Label_Shortcode
  */
 
-if ( !function_exists( 'youtube_white_label_shortcode' ) ) {
-	function youtube_white_label_shortcode() {
-		$youtube_white_label_shortcode = new YouTube_White_Label_Shortcode();
-	}
-	add_action( 'plugins_loaded', 'youtube_white_label_shortcode' );
-}
+if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 
-if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
-	class YouTube_White_Label_Shortcode {
+	class YouTube_White_Label_Shortcode {		
 		
-		static $white_label_script;
-		const version = '0.2.6';
-		const domain  = 'youtube-white-label';
+		/** Singleton *************************************************************/
+		private static $instance;
 		
-		function __construct() {
-			add_action( 'init', 					array( __CLASS__, 'init' ) );
-			add_action( 'init', 					array( __CLASS__, 'locale' ) );
-			
-			add_action( 'admin_enqueue_scripts', 	array( __CLASS__, 'enqueue_scripts' ) );
-			add_action( 'wp_print_footer_scripts', 	array( __CLASS__, 'scripts' ) );
-			//add_action( 'admin_init', 			array( __CLASS__, 'styles' ) );
-			
-			/* Add the post meta box creation function to the 'admin_menu' hook. */
-			add_action( 'add_meta_boxes', 			array( __CLASS__, 'add_meta_box' ) );
-			add_action( 'admin_menu', 				array( __CLASS__, 'add_meta_box' ) );
-			
-			add_shortcode( self::domain, 			array( __CLASS__, 'shortcode' ) );
+		public static $white_label_script;
+		
+		const VERSION = '0.3';
+		const DOMAIN  = 'youtube-white-label';
+	
+		/**
+		 * Main engrade_core Instance
+		 *
+		 * @staticvar array $instance
+		 * @see GrubHub()
+		 * @return The one true engrade_core
+		 */
+		public static function instance() {
+			if ( ! isset( self::$instance ) ) {
+				self::$instance = new self;
+				self::$instance->init();
+			}
+			return self::$instance;
 		}
 		
+		function __construct() {}
+		
 		function init() {
-			define( 'YOUTUBE_WLS_DIR', plugin_dir_path( __FILE__ ) );
-			define( 'YOUTUBE_WLS_ADMIN', trailingslashit( plugin_dir_path( __FILE__ ) ) . 'admin' );
-			//print_r( get_option( 'remove_youtube_white_label_dashboard' ) );
+			add_action( 'init', 					array( $this, 'locale' ) );
+			
+			add_action( 'admin_enqueue_scripts', 	array( $this, 'enqueue_scripts' ) );
+			add_action( 'wp_print_footer_scripts', 	array( $this, 'scripts' ) );
+			
+			/* Add the post meta box creation function to the 'admin_menu' hook. */
+			add_action( 'add_meta_boxes', 			array( $this, 'add_meta_box' ) );
+			add_action( 'admin_menu', 				array( $this, 'add_meta_box' ) );
+			
+			add_shortcode( 'youtube-white-label',	array( $this, 'shortcode' ) );
+			
+			define( 'YOUTUBE_WLS_DIR',				plugin_dir_path( __FILE__ ) );
+			define( 'YOUTUBE_WLS_ADMIN',			trailingslashit( plugin_dir_path( __FILE__ ) ) . 'admin' );
+			
 			$dashboard = get_option( 'remove_youtube_white_label_dashboard' );
 			
-			if ( is_admin() && ( empty( $dashboard ) && $dashboard != '1' )  ) {
+			if ( is_admin() && ( empty( $dashboard ) && $dashboard !== '1' )  ) {
 				require_once( trailingslashit( YOUTUBE_WLS_ADMIN ) . 'dashboard.php' );
 			}
 		}
 		
 		function locale() {
-			load_plugin_textdomain( self::domain, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+			load_plugin_textdomain( self::DOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 		
 		function enqueue_scripts() {
 			global $pagenow;
 			if ( ( $pagenow == 'post.php' || $pagenow == 'post-new.php' ) && !defined( 'IFRAME_REQUEST' ) ) {
-				wp_enqueue_script( self::domain . '-admin', plugins_url( 'admin/js/admin.js', __FILE__ ), array( 'jquery' ), self::version, false );
+				wp_enqueue_script( self::DOMAIN . '-admin', plugins_url( 'admin/js/admin.js', __FILE__ ), array( 'jquery' ), self::VERSION, false );
 			}
 		}
 		
@@ -80,14 +91,8 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			if ( !self::$white_label_script )
 				return;
 				
-			wp_enqueue_script( self::domain, plugins_url( 'js/youtube.js', __FILE__ ), array( 'jquery' ), self::version, false );
-			wp_print_scripts( self::domain );
-		}
-		
-		function styles() {
-			global $pagenow;
-			if ( $pagenow == 'post.php' || $pagenow == 'post-new.php' )
-				wp_register_style( self::domain . '-admin', plugins_url( 'library/css/admin.css', __FILE__ ), false, self::version, 'screen' );
+			wp_enqueue_script( self::DOMAIN, plugins_url( 'js/youtube.js', __FILE__ ), array( 'jquery' ), self::VERSION, false );
+			wp_print_scripts( self::DOMAIN );
 		}
 		
 		function plugin_data( $arg ) {
@@ -133,10 +138,13 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			$height	= str_replace( array( '%', 'em', 'px' ), '', $height );
 			$width	= str_replace( array( '%', 'em', 'px' ), '', $width  );
 			
+			static $counter = 1;
+			
 			$iframe = '';
+			
 			if ( !empty( $id ) ) {
 				
-				$iframe .= '<iframe id="' . self::domain . '" type="text/html" ';
+				$iframe .= '<iframe id="' . self::DOMAIN . '-' . absint( $counter ) . '" type="text/html" ';
 				
 				if ( !empty( $autosize ) && $autosize == '1' )
 					$iframe .= 'class="autosize" ';
@@ -195,8 +203,9 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 				$iframe .= '</iframe>';
 				
 				if ( isset( $thanks ) && ( empty( $thanks ) || $thanks != '0' ) )
-					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __( 'Powered by YouTube White Label Shortcode', self::domain ) . '" rel="bookmark">White Label</a></span>';
-				
+					$iframe .= '<span class="white-label" style="display:none;visability:hidden"><a href="http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode" title="' . __( 'Powered by YouTube White Label Shortcode', self::DOMAIN ) . '" rel="bookmark">White Label</a></span>';
+					
+				$counter++;				
 			}			
 			return wpautop( $iframe );
 		}
@@ -234,7 +243,7 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			/* For each available post type, create a meta box on its edit page if it supports '$prefix-post-settings'. */
 			foreach ( $post_types as $type ) {
 				/* Add the meta box. */
-				add_meta_box( self::domain . "-{$type->name}-meta-box", __( 'YouTube Embed Shortcode Creator (does not save meta)', self::domain ), array( __CLASS__, 'meta_box' ), $type->name, 'side', 'default' );
+				add_meta_box( self::DOMAIN . "-{$type->name}-meta-box", __( 'YouTube Embed Shortcode Creator (does not save meta)', self::DOMAIN ), array( $this, 'meta_box' ), $type->name, 'side', 'default' );
 			}
 		}
 		
@@ -255,59 +264,59 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 			$false_true = array ( 'false' => '0', 'true' => '1' );
 			
 			/* Options */
-			$meta['YouTube'] = array( 'name' => '_YouTube_id', 'title' => __( 'Enter the YouTube ID:', self::domain ), 'type' => 'text', 
-				'description' => __( '<small>http://www.youtube.com/watch?v=</small><strong>Rt3Kiq9NH_k</strong>', self::domain ) );
+			$meta['YouTube'] = array( 'name' => '_YouTube_id', 'title' => __( 'Enter the YouTube ID:', self::DOMAIN ), 'type' => 'text', 
+				'description' => __( '<small>http://www.youtube.com/watch?v=</small><strong>EObNvruiyR4</strong>', self::DOMAIN ) );
 			
-			$meta['height'] = array( 'name' => '_YouTube_height', 'title' => __( 'Height:', self::domain ), 'type' => 'text', 'width' => '90px', 
-				'description' => __( 'Enter desired height. Example: <code>400</code>', self::domain ) );
+			$meta['height'] = array( 'name' => '_YouTube_height', 'title' => __( 'Height:', self::DOMAIN ), 'type' => 'text', 'width' => '90px', 
+				'description' => __( 'Enter desired height. Example: <code>400</code>', self::DOMAIN ) );
 			
-			$meta['width'] = array( 'name' => '_YouTube_width', 'title' => __( 'Width:', self::domain ), 'type' => 'text', 'width' => '90px', 'value' => '640',
-				'description' => __( 'Enter desired width. Example: <code>640</code>', self::domain ) );
+			$meta['width'] = array( 'name' => '_YouTube_width', 'title' => __( 'Width:', self::DOMAIN ), 'type' => 'text', 'width' => '90px', 'value' => '640',
+				'description' => __( 'Enter desired width. Example: <code>640</code>', self::DOMAIN ) );
 			
-			$meta['autohide'] = array( 'name' => '_YouTube_autohide', 'title' => __( 'Autohide:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
-				'description' => __( '', self::domain ) );
+			$meta['autohide'] = array( 'name' => '_YouTube_autohide', 'title' => __( 'Autohide:', self::DOMAIN ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( '', self::DOMAIN ) );
 			
-			$meta['autoplay'] = array( 'name' => '_YouTube_autoplay', 'title' => __( 'Autoplay:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
-				'description' => __( 'Should this video start playing automatically?', self::domain ) );
+			$meta['autoplay'] = array( 'name' => '_YouTube_autoplay', 'title' => __( 'Autoplay:', self::DOMAIN ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( 'Should this video start playing automatically?', self::DOMAIN ) );
 			
-			$meta['controls'] = array( 'name' => '_YouTube_controls', 'title' => __( 'Controls:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
-				'description' => __( 'The video controls, seen at the bottom of the player.', self::domain ) );
+			$meta['controls'] = array( 'name' => '_YouTube_controls', 'title' => __( 'Controls:', self::DOMAIN ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( 'The video controls, seen at the bottom of the player.', self::DOMAIN ) );
 			
-			$meta['branding'] = array( 'name' => '_YouTube_branding', 'title' => __( 'YouTube Logo:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
-				'description' => __( 'Hide the YouTube&trade; logo?', self::domain ) );
+			$meta['branding'] = array( 'name' => '_YouTube_branding', 'title' => __( 'YouTube Logo:', self::DOMAIN ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Hide the YouTube&trade; logo?', self::DOMAIN ) );
 			
-			$meta['hd'] = array( 'name' => '_YouTube_hd', 'title' => __( 'High Def:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
-				'description' => __( 'Auto start in <abbr title="High Definition">HD</abbr>.', self::domain ) );
+			$meta['hd'] = array( 'name' => '_YouTube_hd', 'title' => __( 'High Def:', self::DOMAIN ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Auto start in <abbr title="High Definition">HD</abbr>.', self::DOMAIN ) );
 			
-			$meta['rel'] = array( 'name' => '_YouTube_rel', 'title' => __( 'Related:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
-				'description' => __( 'Show realted videos at the end?', self::domain ) );
+			$meta['rel'] = array( 'name' => '_YouTube_rel', 'title' => __( 'Related:', self::DOMAIN ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( 'Show realted videos at the end?', self::DOMAIN ) );
 			
-			$meta['showinfo'] = array( 'name' => '_YouTube_showinfo', 'title' => __( 'Showinfo:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
-				'description' => __( '', self::domain ) );
+			$meta['showinfo'] = array( 'name' => '_YouTube_showinfo', 'title' => __( 'Showinfo:', self::DOMAIN ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( '', self::DOMAIN ) );
 			
-			$meta['thanks'] = array( 'name' => '_YouTube_thanks', 'title' => __( 'Thanks:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
-				'description' => __( 'Leave link to author (Hidden from public view).', self::domain ) );
+			$meta['thanks'] = array( 'name' => '_YouTube_thanks', 'title' => __( 'Thanks:', self::DOMAIN ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Leave link to author (Hidden from public view).', self::DOMAIN ) );
 			
-			$meta['autosize'] = array( 'name' => '_YouTube_autosize', 'title' => __( 'Autosize:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
-				'description' => __( 'Include a jQuery file to &ldquo;autosize&rdquo; the video to fit the content?', self::domain ) );
+			$meta['autosize'] = array( 'name' => '_YouTube_autosize', 'title' => __( 'Autosize:', self::DOMAIN ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Include a jQuery file to &ldquo;autosize&rdquo; the video to fit the content?', self::DOMAIN ) );
 			
-			$meta['border'] = array( 'name' => '_YouTube_border', 'title' => __( 'Border:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
-				'description' => __( 'Give your player a colored border? (uses <code>color1</code> and <code>color2</code> options)', self::domain ) );
+			$meta['border'] = array( 'name' => '_YouTube_border', 'title' => __( 'Border:', self::DOMAIN ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( 'Give your player a colored border? (uses <code>color1</code> and <code>color2</code> options)', self::DOMAIN ) );
 			
-			$meta['cc_load_policy'] = array( 'name' => '_YouTube_cc', 'title' => __( 'Closed Captions:', self::domain ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
-				'description' => __( 'Setting to true will cause closed captions to be shown by default, even if the user has turned captions off.', self::domain ) );
+			$meta['cc_load_policy'] = array( 'name' => '_YouTube_cc', 'title' => __( 'Closed Captions:', self::DOMAIN ), 'type' => 'select', 'options' => $false_true, 'use_key_and_value' => true, 
+				'description' => __( 'Setting to true will cause closed captions to be shown by default, even if the user has turned captions off.', self::DOMAIN ) );
 			
-			$meta['colorone'] = array( 'name' => '_YouTube_colorone', 'title' => __( 'Color1:', self::domain ), 'type' => 'text', 'width' => '90px', 'value' => '',
-				'description' => __( 'Set your primary color.', self::domain ) );
+			$meta['colorone'] = array( 'name' => '_YouTube_colorone', 'title' => __( 'Color1:', self::DOMAIN ), 'type' => 'text', 'width' => '90px', 'value' => '',
+				'description' => __( 'Set your primary color.', self::DOMAIN ) );
 			
-			$meta['colortwo'] = array( 'name' => '_YouTube_colortwo', 'title' => __( 'Color2:', self::domain ), 'type' => 'text', 'width' => '90px', 'value' => '',
-				'description' => __( 'Set your secondary color.', self::domain ) );
+			$meta['colortwo'] = array( 'name' => '_YouTube_colortwo', 'title' => __( 'Color2:', self::DOMAIN ), 'type' => 'text', 'width' => '90px', 'value' => '',
+				'description' => __( 'Set your secondary color.', self::DOMAIN ) );
 			
-			$meta['disablekb'] = array( 'name' => '_YouTube_disablekb', 'title' => __( 'Disable Keyboard:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
-				'description' => __( 'Disable the keyboard shortcuts?', self::domain ) );
+			$meta['disablekb'] = array( 'name' => '_YouTube_disablekb', 'title' => __( 'Disable Keyboard:', self::DOMAIN ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Disable the keyboard shortcuts?', self::DOMAIN ) );
 			
-			$meta['fullscreen'] = array( 'name' => '_YouTube_fullscreen', 'title' => __( 'Fullscreen:', self::domain ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
-				'description' => __( 'Allow fullscreen button?', self::domain ) );
+			$meta['fullscreen'] = array( 'name' => '_YouTube_fullscreen', 'title' => __( 'Fullscreen:', self::DOMAIN ), 'type' => 'select', 'options' => $true_false, 'use_key_and_value' => true, 
+				'description' => __( 'Allow fullscreen button?', self::DOMAIN ) );
 		
 			return $meta;
 		}
@@ -326,31 +335,24 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		
 			foreach ( $meta_box_options as $option ) {
                 if ( method_exists( 'YouTube_White_Label_Shortcode', "meta_box_{$option['type']}" ) )
-                    call_user_func( array( __CLASS__, "meta_box_{$option['type']}" ), $option, get_post_meta( $object->ID, $option['name'], true ) );
+                    call_user_func( array( $this, "meta_box_{$option['type']}" ), $option, get_post_meta( $object->ID, $option['name'], true ) );
             } ?>
 			
-			<p class="youtube-advanced-wrap" style="text-align:right"><a class="youtube-advanced" href="#"><?php _e( 'Advanced options', self::domain ); ?></a></p>
+			<p class="youtube-advanced-wrap" style="text-align:right"><a class="youtube-advanced" href="#"><?php _e( 'Advanced options', self::DOMAIN ); ?></a></p>
             
             <div id="youtube-advanced" class="hide-if-js"></div>
             
             <p class="output">
-				<label for="_YouTube_output"><?php _e( 'Output:', self::domain ); ?></label>
+				<label for="_YouTube_output"><?php _e( 'Output:', self::DOMAIN ); ?></label>
 				<br />
 				<span id="_YouTube_output" class="postbox" style="display:block; min-height: 50px; padding: 5px;"></span>
 			</p>
             
-			<!--<a id="youtube-send-to-content" href="#"><?php _e( 'send to content', self::domain ); ?></a>-->
+			<!--<a id="youtube-send-to-content" href="#"><?php _e( 'send to content', self::DOMAIN ); ?></a>-->
                 
             <div id="youtube-colorpicker"></div>
             
-			<p class="howto" style="text-align:right"><a class="frosty" href="#"><?php _e( 'Like this plugin?, donate', self::domain ); ?></a></p>
-			
-			<div id="frosty" style="display:none;text-align:center">
-				<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XQRHECLPQ46TE" style="text-decoration:none">
-					<input type="button" class="primary button" value="DONATE" />
-				</a>
-			</div>
-		
+            <?php printf( __( 'Like this plugin? <a href="%s" target="_blank">Buy me a beer</a>!', self::DOMAIN ), 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XQRHECLPQ46TE' ); ?></p>
 			<?php
 		}
 		
@@ -394,6 +396,23 @@ if( !class_exists( 'YouTube_White_Label_Shortcode' ) ) {
 		}
 		
 	}
-};
 
-?>
+	/**
+	 * The main function responsible for returning the one true 
+	 * Instance to functions everywhere.
+	 *
+	 * Use this function like you would a global variable, except without needing
+	 * to declare the global.
+	 *
+	 * Example: <?php $youtube = YOUTUBE_WHITE_LABEL_SHORTCODE(); ?>
+	 *
+	 * @return The one true Instance
+	 */
+	function YOUTUBE_WHITE_LABEL_SHORTCODE() {
+		return YouTube_White_Label_Shortcode::instance();
+	}
+	
+	// Starts EXNTEDD_CORE running
+	add_action( 'plugins_loaded', 'YOUTUBE_WHITE_LABEL_SHORTCODE' );
+
+endif;

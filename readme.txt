@@ -3,10 +3,10 @@ Contributors: austyfrosty
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XQRHECLPQ46TE
 Tags: YouTube, shortcode, White Label, YouTube White Label, embed
 Requires at least: 3.0
-Tested up to: 3.5
+Tested up to: 3.9
 Stable tag: trunk
 
-A simple shortcode to embed white label YouTube videos using the latest iframe HTML5 embed.
+A simple shortcode to embed white labeled YouTube videos using the latest iframe HTML5 embed.
 
 == Description ==
 
@@ -19,7 +19,7 @@ If you'd like to remove the meta box from a certain `$post_type` use the `remove
 Alternativly you can modify the shortcode yourself, where `1` is true and `0` is false:
 `[youtube-white-label id="" height="" width="" branding="1" autohide="1" autoplay="0" controls="0" hd="1" rel="0" showinfo="0" autosize="1" border="0" cc="0" disablekb="1" fullscreen="1" /]`
 
-For question please visit my blog @ [http://austinpassy.com](http://austinpassy.com/wordpress-plugins/youtube-white-label-shortcode/)
+For question please visit my blog @ [http://austin.passy.co](http://austin.passy.co/wordpress-plugins/youtube-white-label-shortcode/)
 
 Additional controls listed [on Google code](http://code.google.com/apis/youtube/player_parameters.html?playerVersion=HTML5) *for the terminology of each shortcode argument*.
 
@@ -44,6 +44,12 @@ Follow the steps below to install the plugin.
 2. A YouTube&trade; video without controls.
 
 == Changelog ==
+
+= Version 0.3 (2/4/14)
+
+* Updated Static errors in PHP > 5.3.
+* Cleaned up code and jQuery.
+* Checked for working version as of WP 3.9-alpha 
 
 = Version 0.2.6.1 (12/6/12)
 
@@ -136,6 +142,9 @@ Follow the steps below to install the plugin.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 0.3 =
+Fresh and clean.
 
 = 0.2.5 =
 Happy Holidays! Love &mdash;Frosty
