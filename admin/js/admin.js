@@ -1,4 +1,4 @@
-function preview() {	
+function you_tube_shortcode_preview() {	
 	var Version,
 		$this,
 		ThisID,
@@ -29,11 +29,11 @@ jQuery(document).ready(
 			$Controls.selects.each(function() { this.selectedIndex = 0; });
 			
 			/* Watch the keys */
-			$Controls.inputs.on('keyup', preview).on('keypress', function(e) {
+			$Controls.inputs.on('keyup', you_tube_shortcode_preview).on('keypress', function(e) {
 				if( e.which == 13 )
 					e.preventDefault();
 			});
-			$Controls.selects.on('click change', preview);
+			$Controls.selects.on('click change', you_tube_shortcode_preview);
 			
 			/* Advanced dropdown */
 			$('#youtube-white-label-' + post_type + '-meta-box p:not(#youtube-white-label-' + post_type + '-meta-box p:first-child, #youtube-white-label-' + post_type + '-meta-box p.output, #youtube-white-label-' + post_type + '-meta-box p.howto, #youtube-white-label-' + post_type + '-meta-box p.youtube-advanced-wrap)').appendTo('#youtube-advanced');

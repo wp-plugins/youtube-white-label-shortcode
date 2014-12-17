@@ -1,9 +1,9 @@
 === YouTube White Label Shortcode ===
 Contributors: austyfrosty
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XQRHECLPQ46TE
-Tags: YouTube, shortcode, White Label, YouTube White Label, embed
+Tags: YouTube, shortcode, White Label, YouTube White Label, embed, oembed
 Requires at least: 3.0
-Tested up to: 3.9
+Tested up to: 4.2
 Stable tag: trunk
 
 A simple shortcode to embed white labeled YouTube videos using the latest iframe HTML5 embed.
@@ -44,6 +44,11 @@ Follow the steps below to install the plugin.
 2. A YouTube&trade; video without controls.
 
 == Changelog ==
+
+= Version 0.3.1 (12/17/14)
+
+* Updated admin JS function name.
+* Ready for WordPress 4.1
 
 = Version 0.3 (2/4/14)
 

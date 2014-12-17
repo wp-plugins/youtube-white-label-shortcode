@@ -3,7 +3,7 @@
  * Plugin Name: YouTube White Label Shortcode
  * Plugin URI: http://austin.passy.co/wordpress-plugins/youtube-white-label-shortcode/
  * Description: Use this plugin to show off videos hosted on YouTube&trade; without the YouTube&trade; logo overlay or controls. It's as easy as entering the video ID in a shortcode OR using the built in shortcode generator metabox in the post[-new].php page. <code>[youtube-white-label id=""]</code>.
- * Version: 0.3
+ * Version: 0.3.1
  * Author: Austin &ldquo;Frosty&rdquo; Passy
  * Author URI: http://austin.passy.co/
  * Text Domain: youtube-white-label
@@ -34,7 +34,7 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 		
 		public static $white_label_script;
 		
-		const VERSION = '0.3';
+		const VERSION = '0.3.1';
 		const DOMAIN  = 'youtube-white-label';
 	
 		/**
@@ -55,7 +55,7 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 		function __construct() {}
 		
 		function init() {
-			add_action( 'init', 					array( $this, 'locale' ) );
+			add_action( 'init', 						array( $this, 'locale' ) );
 			
 			add_action( 'admin_enqueue_scripts', 	array( $this, 'enqueue_scripts' ) );
 			add_action( 'wp_print_footer_scripts', 	array( $this, 'scripts' ) );
@@ -67,7 +67,7 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 			add_shortcode( 'youtube-white-label',	array( $this, 'shortcode' ) );
 			
 			define( 'YOUTUBE_WLS_DIR',				plugin_dir_path( __FILE__ ) );
-			define( 'YOUTUBE_WLS_ADMIN',			trailingslashit( plugin_dir_path( __FILE__ ) ) . 'admin' );
+			define( 'YOUTUBE_WLS_ADMIN',				trailingslashit( plugin_dir_path( __FILE__ ) ) . 'admin' );
 			
 			$dashboard = get_option( 'remove_youtube_white_label_dashboard' );
 			
@@ -95,10 +95,16 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 			wp_print_scripts( self::DOMAIN );
 		}
 		
-		function plugin_data( $arg ) {
+		function plugin_data( $arg = false ) {
+			if ( !$arg )
+				return;
+				
 			$plugin = get_plugin_data( __FILE__ );
 			
-			return $plugin[$arg];
+			if ( isset( $plugin[$arg] ) )
+				return $plugin[$arg];
+			
+			return false;
 		}
 	
 		/**
@@ -116,19 +122,19 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 				'height'			=> '',
 				'width'				=> '',
 				'branding'			=> '1',
-				'autohide' 			=> '1',
-				'autoplay' 			=> '',
-				'controls' 			=> '0',
+				'autohide' 		=> '1',
+				'autoplay' 		=> '',
+				'controls' 		=> '0',
 				'hd' 				=> '0',
 				'rel' 				=> '0',
-				'showinfo' 			=> '0',
+				'showinfo' 		=> '0',
 				'thanks' 			=> '1',
 				'autosize'			=> '1',
 				'border'			=> '0',
 				'cc'				=> '0',
 				'colorone'			=> '',
 				'colortwo'			=> '',
-				'disablekb'			=> '',
+				'disablekb'		=> '',
 				'fullscreen'		=> '0',
 			), $attr ) );
 			
@@ -149,7 +155,9 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 				if ( !empty( $autosize ) && $autosize == '1' )
 					$iframe .= 'class="autosize" ';
 					
-				$iframe .= 'src="http://www.youtube.com/embed/' . esc_attr( $id ) . '?';
+				$src = is_ssl() ? 'http' : 'https';
+					
+				$iframe .= 'src="' . $src . '://www.youtube.com/embed/' . esc_attr( $id ) . '?';
 				
 				/* Branding option must be first in line */
 				if ( $branding != '' )
@@ -210,6 +218,12 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
 			return wpautop( $iframe );
 		}
 		
+		/**
+		 *
+		 * MAYBE:
+preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $matches );
+		 *
+		 */
 		function strip_url( $url ) {
 			$id_match = '[0-9a-zA-Z\-_]+';
 			if ( preg_match( '|https?://(www\.)?youtube\.com/(watch)?\?.*v=(' . $id_match . ')|', $url, $matches ) )
@@ -345,7 +359,7 @@ if ( !class_exists( 'YouTube_White_Label_Shortcode' ) ) :
             <p class="output">
 				<label for="_YouTube_output"><?php _e( 'Output:', self::DOMAIN ); ?></label>
 				<br />
-				<span id="_YouTube_output" class="postbox" style="display:block; min-height: 50px; padding: 5px;"></span>
+				<span id="_YouTube_output" class="postbox" style="box-sizing: border-box; display:block; min-height: 50px; padding: 5px;"></span>
 			</p>
             
 			<!--<a id="youtube-send-to-content" href="#"><?php _e( 'send to content', self::DOMAIN ); ?></a>-->
